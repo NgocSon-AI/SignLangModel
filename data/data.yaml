@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 6
+names: ['hello', 'love', 'no', 'please', 'thanks', 'yes']
+
+roboflow:
+  workspace: ngocson
+  project: signlang-gulrb
+  version: 5
+  license: MIT
+  url: https://universe.roboflow.com/ngocson/signlang-gulrb/dataset/5
