@@ -1,0 +1,45 @@
+# my_hyp.yaml - Hyperparameters for sign language object detection (small dataset)
+
+# Learning parameters
+lr0: 0.01         # Initial learning rate
+lrf: 0.01         # Final learning rate fraction
+momentum: 0.937   # SGD momentum
+weight_decay: 0.0005  # Optimizer weight decay
+
+# Warmup
+warmup_epochs: 3.0
+warmup_momentum: 0.8
+warmup_bias_lr: 0.1
+
+# Loss parameters
+box: 0.05         # Box loss gain
+cls: 0.5          # Class loss gain
+cls_pw: 1.0       # Class loss positive weight
+obj: 1.0          # Objectness loss gain
+obj_pw: 1.0       # Objectness loss positive weight
+
+# IoU & anchor thresholds
+iou_t: 0.2        # IoU training threshold
+anchor_t: 4.0     # Anchor-multiple threshold
+
+# Focal loss gamma (0 = no focal loss)
+fl_gamma: 0.0
+
+# Augmentation parameters
+hsv_h: 0.015      # Hue augmentation (±)
+hsv_s: 0.7        # Saturation augmentation (±)
+hsv_v: 0.4        # Value augmentation (±)
+degrees: 10.0     # Rotation (± degrees)
+translate: 0.2    # Translation (± fraction)
+scale: 0.5        # Scale (± gain)
+shear: 2.0        # Shear (± degrees)
+perspective: 0.0  # Perspective augmentation (default off for sign detection)
+
+# Flips
+flipud: 0.0       # Flip up-down (set 0 nếu dấu tay phân biệt trên dưới)
+fliplr: 0.5       # Flip left-right
+
+# CutMix / Mosaic / MixUp
+mosaic: 1.0       # Mosaic augmentation
+mixup: 0.2        # MixUp augmentation
+copy_paste: 0.0   # Copy-paste augmentation (không dùng cho sign language)
