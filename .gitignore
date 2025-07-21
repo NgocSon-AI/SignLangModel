@@ -208,3 +208,7 @@ __marimo__/
 
 
 artifacts/*
+data/*
+data.zip
+data
+yolov5/
