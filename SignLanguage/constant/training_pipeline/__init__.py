@@ -36,3 +36,12 @@ MODEL_TRAINER_PRETRAINED_WEIGHT_NAME:str = "yolov5s.pt"
 MODEL_TRAINER_NO_EPOCHS: int = 1
 
 MODEL_TRAINER_BATCH_SIZE: int = 16
+
+
+"""
+    MODEL PUSHER related constant start with MODEL_PUSHER VAR NAME.
+"""
+
+BUCKET_NAME = "ngocson-sign-lang-2025"
+
+S3_MODEL_NAME = "best.pt"
