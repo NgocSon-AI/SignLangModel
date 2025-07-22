@@ -214,3 +214,8 @@ data
 yolov5/
 
 sign-user_accessKeys.csv
+
+yolov5/*
+yolov5
+models/*
+custom_yolov5s.yaml
