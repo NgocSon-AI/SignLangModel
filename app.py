@@ -1,43 +1,84 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
-import cv2
-import numpy as np
-import base64
-from io import BytesIO
-from PIL import Image
-import torch
+import os
+import sys
+from SignLanguage.pipeline.training_pipeline import TrainPipeline
+from SignLanguage.exception import SignException
+from SignLanguage.logger import logging
+from SignLanguage.utils.main_utils import decodeImage, encodeImageIntoBase64
+from SignLanguage.constant.application import APP_HOST, APP_PORT
 
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+from flask import Flask, request, jsonify, render_template, Response
+from flask_cors import CORS, cross_origin
 
-# Load YOLO model (YOLOv5 hoặc YOLOv8 đều được)
-model = torch.hub.load('./yolov5', 'custom', path='yolov5/yolov5s.pt', source='local', force_reload=True)
 
-model.conf = 0.5
 
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+app = Flask(__name__)
+CORS(app)
 
-@app.post("/predict")
-async def predict(request: Request):
-    data = await request.json()
-    img_data = data['image'].split(",")[1]
-    img_bytes = base64.b64decode(img_data)
-    img = Image.open(BytesIO(img_bytes)).convert("RGB")
+class ClientApp:
+    def __init__(self):
+        self.filename = "inputImage.jpg"
 
-    # Convert to OpenCV
-    frame = np.array(img)
-    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-    # Run YOLO
-    results = model(frame)
-    pred = results.pandas().xyxy[0]
+    
 
-    if len(pred) > 0:
-        label = pred.iloc[0]['name']
-    else:
-        label = "No sign detected"
+@app.route("/train")
+def trainRoute():
+    obj = TrainPipeline()
+    obj.run_pipeline()
+    return "Training Successfull!!" 
 
-    return JSONResponse({"label": label})
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+
+@app.route("/predict", methods=['POST','GET'])
+@cross_origin()
+def predictRoute():
+    try:
+        image = request.json['image']
+        decodeImage(image, clApp.filename)
+
+        os.system("cd yolov5/ && python detect.py --weights my_model.pt --img 416 --conf 0.5 --source ../data/inputImage.jpg")
+
+        opencodedbase64 = encodeImageIntoBase64("yolov5/runs/detect/exp/inputImage.jpg")
+        result = {"image": opencodedbase64.decode('utf-8')}
+        os.system("rm -rf yolov5/runs")
+
+    except ValueError as val:
+        print(val)
+        return Response("Value not found inside  json data")
+    except KeyError:
+        return Response("Key value error incorrect key passed")
+    except Exception as e:
+        print(e)
+        result = "Invalid input"
+
+    return jsonify(result)
+
+
+
+
+@app.route("/live", methods=['GET'])
+@cross_origin()
+def predictLive():
+    try:
+        os.system("cd yolov5/ && python detect.py --weights my_model.pt --img 416 --conf 0.5 --source 0")
+        os.system("rm -rf yolov5/runs")
+        return "Camera starting!!" 
+
+    except ValueError as val:
+        print(val)
+        return Response("Value not found inside  json data")
+    
+
+
+
+
+
+if __name__ == "__main__":
+    clApp = ClientApp()
+    app.run(host=APP_HOST, port=APP_PORT)
