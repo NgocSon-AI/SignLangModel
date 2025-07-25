@@ -8,11 +8,11 @@ https://pkg.jenkins.io
 
 https://pkg.jenkins.io/debian-stable/
 
-sudo systemct1 start jenkins
+sudo systemctl start jenkins
 
-sudo systemct1 enable jenkins
+sudo systemctl enable jenkins
 
-sudo systemct1 status jenkins
+sudo systemctl status jenkins
 
 
 
