@@ -1,4 +1,4 @@
-FROM python:3.10-slim  # hoặc slim-bookworm
+FROM python:3.10-slim
 
 RUN apt update -y && apt install awscli -y
 
